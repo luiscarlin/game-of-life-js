@@ -1,9 +1,26 @@
-var ctx = document.getElementById("canvas").getContext("2d");
+function game(dom) {
 
-console.log("hello");
+    var ctx = dom.getContext("2d"), 
+        cells = [];
 
-init();
+    init();
+    run();
 
-function init() { 
-    console.log("inside init");
+    function init() { 
+        console.log("initialize the grid");
+        draw();
+    }
+
+    function run() { 
+        console.log("New Generation");
+        draw();
+
+        setTimeout(function() { run(); }, 3000);
+    }
+
+    function draw() { 
+        console.log("drawing grid")
+    }
 }
+
+game(document.getElementById("canvas"));

@@ -3,18 +3,21 @@ function game(dom, width, height) {
     var ctxt = dom.getContext("2d")
     ctxt.canvas.width = width
     ctxt.canvas.height = height
+    ctxt.fillStyle = "#FF0000"
 
-    var grid = fillRandom(createNewGrid(width, height))
-    draw(grid, ctxt)
-    run(grid, ctxt)
+    var grid = createNewGrid(width, height)
+    var nextGrid = createNewGrid(width, height)
+    var percentAlive = 0
+    
+    fillRandom()
+    run()
 
-    function fillRandom(arr) {
-        for (var i = 0; i < arr.length; i++) { 
-            for (var j = 0; j < arr[i].length; j++) { 
-                arr[i][j] = Math.round(Math.random())
+    function fillRandom() {
+        for (var i = 0; i < grid.length; i++) { 
+            for (var j = 0; j < grid[i].length; j++) { 
+                grid[i][j] = Math.round(Math.random())
             }
         }
-        return arr
     }
 
     function createNewGrid(numCols, numRows) {
@@ -25,18 +28,101 @@ function game(dom, width, height) {
         return arr
     }
 
-    function draw(arr, ctxt) {
-        ctxt.clearRect(0, 0, ctxt.height, ctxt.width)
+    function draw() {
+        ctxt.clearRect(0, 0, height, width)
+        
+        let numAlive = 0
 
-        for (var i = 0; i < arr.length; i++) { 
-            for (var j = 0; j < arr[i].length; j++) { 
-                if(arr[i][j] === 1) { 
+        for (var i = 0; i < grid.length; i++) { 
+            for (var j = 0; j < grid[i].length; j++) { 
+                if(grid[i][j] === 1) { 
                     // alive
                     ctxt.fillRect(i, j, 1, 1)
+                    numAlive++
+                }
+
+            }
+        }
+        percentAlive = (numAlive / (width * height)) * 100
+        document.getElementById("percent").innerText = "Percent Alive: " + Math.round(percentAlive * 100) / 100 + "%"
+
+        console.log(percentAlive)
+    }
+
+    function run() {
+        draw()
+        applyRules()
+        requestAnimationFrame(run)
+    }
+
+    function applyRules() {
+        for (var i = 0; i < grid.length; i++) { 
+            for (var j = 0; j < grid[i].length; j++) { 
+                let numAliveNeigh = numAliveNeighbors(i, j)
+                
+                if (grid[i][j] === 1) {
+                    if (numAliveNeigh < 2) {
+                        nextGrid[i][j] = 0
+                    }
+                    else if ((numAliveNeigh === 2) || (numAliveNeigh === 3)) { 
+                        nextGrid[i][j] = 1
+                    }
+                    else if (numAliveNeigh > 3) { 
+                        nextGrid[i][j] = 0
+                    }
+                }
+                else { 
+                    if (numAliveNeigh === 3) {
+                        nextGrid[i][j] = 1
+                    }
+                    else { 
+                        nextGrid[i][j] = 0
+                    }
                 }
             }
         }
+        var temp = grid
+        grid = nextGrid
+        nextGrid = temp
+    }
+
+    function numAliveNeighbors(i, j) { 
+        let alive = 0;
+
+        // top
+        if ((j - 1) >= 0)
+            alive += grid[i][j - 1]
+        
+        // bottom
+        if ((j + 1) < grid[i].length)
+            alive += grid[i][j + 1]
+
+        // left
+        if ((i - 1) >= 0)
+            alive += grid[i - 1][j]
+        
+        // right
+        if ((i + 1) < grid.length)
+            alive += grid[i + 1][j]
+
+        // top left
+        if (((i - 1) >= 0) && ((j - 1) >= 0))
+            alive += grid[i - 1][j - 1]
+        
+        // top right
+        if (((i + 1) < grid.length) && ((j - 1) >= 0))
+            alive += grid[i + 1][j - 1]
+
+        // bottom left
+        if (((i - 1) >= 0) && ((j + 1) < grid[i].length))
+            alive += grid[i - 1][j + 1]
+
+        // bottom right
+        if (((i + 1) < grid.length) && ((j + 1) < grid[i].length))
+            alive += grid[i + 1][j + 1]
+
+        return alive
     }
 }
 
-game(document.getElementById("canvas"), 400, 400)
+game(document.getElementById("canvas"), 500, 500)

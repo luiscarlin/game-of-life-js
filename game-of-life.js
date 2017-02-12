@@ -125,4 +125,4 @@ function game(dom, width, height) {
     }
 }
 
-game(document.getElementById("canvas"), 500, 500)
+game(document.getElementById("canvas"), 400, 400)

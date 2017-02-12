@@ -1,6 +1,6 @@
-function game(dom, width, height) {
+function game(canvasDom, width, height, percentDom, generationDom) {
 
-    var ctxt = dom.getContext("2d")
+    var ctxt = canvasDom.getContext("2d")
     ctxt.canvas.width = width
     ctxt.canvas.height = height
     ctxt.fillStyle = "#FF0000"
@@ -46,8 +46,8 @@ function game(dom, width, height) {
             }
         }
         percentAlive = (numAlive / (width * height)) * 100
-        document.getElementById("percent").innerText = "Percent Alive: " + (Math.round(percentAlive * 100) / 100).toFixed(2) + "%"
-        document.getElementById("generation").innerText = "Generation: " + generation
+        percentDom.innerText = "Percent Alive: " + (Math.round(percentAlive * 100) / 100).toFixed(2) + "%"
+        generationDom.innerText = "Generation: " + generation
     }
 
     function run() {
@@ -126,4 +126,4 @@ function game(dom, width, height) {
     }
 }
 
-game(document.getElementById("canvas"), 400, 400)
+game(document.getElementById("canvas"), 400, 400, document.getElementById("percent"), document.getElementById("generation"))

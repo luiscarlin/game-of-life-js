@@ -8,6 +8,7 @@ function game(dom, width, height) {
     var grid = createNewGrid(width, height)
     var nextGrid = createNewGrid(width, height)
     var percentAlive = 0
+    var generation = 0
     
     fillRandom()
     run()
@@ -32,6 +33,7 @@ function game(dom, width, height) {
         ctxt.clearRect(0, 0, height, width)
         
         let numAlive = 0
+        generation++
 
         for (var i = 0; i < grid.length; i++) { 
             for (var j = 0; j < grid[i].length; j++) { 
@@ -45,6 +47,7 @@ function game(dom, width, height) {
         }
         percentAlive = (numAlive / (width * height)) * 100
         document.getElementById("percent").innerText = "Percent Alive: " + (Math.round(percentAlive * 100) / 100).toFixed(2) + "%"
+        document.getElementById("generation").innerText = "Generation: " + generation
     }
 
     function run() {

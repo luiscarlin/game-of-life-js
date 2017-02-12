@@ -44,7 +44,7 @@ function game(dom, width, height) {
             }
         }
         percentAlive = (numAlive / (width * height)) * 100
-        document.getElementById("percent").innerText = "Percent Alive: " + Math.round(percentAlive * 100) / 100 + "%"
+        document.getElementById("percent").innerText = "Percent Alive: " + (Math.round(percentAlive * 100) / 100).toFixed(2) + "%"
     }
 
     function run() {
